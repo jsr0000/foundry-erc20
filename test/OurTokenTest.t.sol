@@ -26,4 +26,19 @@ contract OurTokenTest is Test {
     function testBobBalance() public view {
         assertEq(STARTING_BALANCE, ourToken.balanceOf(tim));
     }
+
+    function testAllowance() public {
+        uint256 initialAllowance = 1000;
+
+        vm.prank(tim);
+        ourToken.approve(hazel, initialAllowance);
+
+        uint256 transferAmount = 500;
+
+        vm.prank(hazel);
+        ourToken.transferFrom(tim, hazel, transferAmount);
+
+        assertEq(ourToken.balanceOf(hazel), transferAmount);
+        assertEq(ourToken.balanceOf(tim), STARTING_BALANCE - transferAmount);
+    }
 }
